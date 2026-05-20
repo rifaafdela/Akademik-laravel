@@ -1,5 +1,5 @@
-  <footer class="footer mt-auto py-3 bg-dark ">
-        <div class="container ">
-            <span class="text-white">Copyright &copy; {{ date("Y") }} PNP.</span>
+<footer class="footer mt-auto py-3">
+        <div class="container text-center">
+            <span>Copyright &copy; {{ date("Y") }} Politeknik Negeri Padang. All Rights Reserved.</span>
         </div>
     </footer>

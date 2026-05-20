@@ -1,179 +1,124 @@
 @extends('layouts.main')
 
-@section('title', 'Edit Mahasiswa')
+@section('title', 'Detail Mahasiswa')
 
 @section('content')
 
 <div class="container mt-4">
 
-    <div class="card shadow">
-        
-        <div class="card-header bg-primary text-white">
-            <h4>Detail Data Mahasiswa</h4>
-        </div>
+    <div class="mb-4 text-center text-md-start">
+        <a href="{{ route('mahasiswa.index') }}" class="text-decoration-none text-muted fw-semibold" style="font-size: 0.875rem;">
+            ← Kembali ke Daftar Mahasiswa
+        </a>
+        <h2 class="mt-2" style="font-family: var(--font-heading);">Detail Informasi Mahasiswa</h2>
+        <p class="text-muted">Profil lengkap akademik mahasiswa yang terdaftar.</p>
+    </div>
 
-        <div class="card-body">
+    <div class="card profile-card">
+        <div class="card-body p-4 p-md-5">
+            
+            {{-- Profile Avatar & Header --}}
+            @php
+                $avatarBg = '#e2e8f0';
+                $avatarColor = '#475569';
+                $avatarBorder = '#cbd5e1';
+                $prodiUpper = strtoupper($mahasiswa->prodi);
+                if ($prodiUpper === 'TRPL') {
+                    $avatarBg = '#dbeafe'; $avatarColor = '#1e40af'; $avatarBorder = '#bfdbfe';
+                } elseif ($prodiUpper === 'MI') {
+                    $avatarBg = '#d1fae5'; $avatarColor = '#065f46'; $avatarBorder = '#a7f3d0';
+                } elseif ($prodiUpper === 'TK') {
+                    $avatarBg = '#fef3c7'; $avatarColor = '#92400e'; $avatarBorder = '#fde68a';
+                } elseif ($prodiUpper === 'TEKKOM') {
+                    $avatarBg = '#f3e8ff'; $avatarColor = '#6b21a8'; $avatarBorder = '#e9d5ff';
+                }
+            @endphp
+            <div class="profile-avatar-container" style="background-color: {{ $avatarBg }}; color: {{ $avatarColor }}; border-color: {{ $avatarBorder }};">
+                @php
+                    $words = explode(' ', $mahasiswa->nama_lengkap);
+                    $initials = '';
+                    if (count($words) >= 2) {
+                        $initials = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
+                    } else {
+                        $initials = strtoupper(substr($mahasiswa->nama_lengkap, 0, 2));
+                    }
+                @endphp
+                {{ $initials }}
+            </div>
 
-            <form action="{{ route('mahasiswa.update', $mahasiswa->id) }}" method="POST">
-                @csrf
-                @method('PUT')
+            <h3 class="profile-header-name">{{ $mahasiswa->nama_lengkap }}</h3>
+            
+            <div class="profile-header-sub">
+                <span class="font-monospace fw-bold text-secondary">{{ $mahasiswa->nim }}</span>
+                <span class="text-muted">•</span>
+                @php
+                    $badgeClass = 'badge-default';
+                    if ($prodiUpper === 'TRPL') $badgeClass = 'badge-trpl';
+                    elseif ($prodiUpper === 'MI') $badgeClass = 'badge-mi';
+                    elseif ($prodiUpper === 'TK') $badgeClass = 'badge-tk';
+                    elseif ($prodiUpper === 'TEKKOM') $badgeClass = 'badge-tekkom';
+                @endphp
+                <span class="badge-custom {{ $badgeClass }}">{{ $mahasiswa->prodi }}</span>
+            </div>
 
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul class="mb-0">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
+            <hr class="my-4" style="border-color: var(--border-color);">
 
-                {{-- NIM --}}
-                <div class="mb-3">
-                    <label class="form-label">NIM</label>
-                    <input type="text" 
-                           name="nim" 
-                           class="form-control"
-                           value="{{ old('nim', $mahasiswa->nim) }}"
-                           placeholder="Masukkan NIM">
+            {{-- Detail Fields Grid --}}
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Nomor Induk Mahasiswa</div>
+                    <div class="detail-value font-monospace">{{ $mahasiswa->nim }}</div>
                 </div>
 
-                {{-- Nama --}}
-                <div class="mb-3">
-                    <label class="form-label">Nama Lengkap</label>
-                    <input type="text" 
-                           name="nama_lengkap" 
-                           class="form-control"
-                           value="{{ old('nama_lengkap', $mahasiswa->nama_lengkap) }}"
-                           placeholder="Masukkan Nama">
+                <div class="detail-item">
+                    <div class="detail-label">Nama Lengkap</div>
+                    <div class="detail-value">{{ $mahasiswa->nama_lengkap }}</div>
                 </div>
 
-                {{-- Tempat Lahir --}}
-                <div class="mb-3">
-                    <label class="form-label">Tempat Lahir</label>
-                    <input type="text" 
-                           name="tempat_lahir" 
-                           class="form-control"
-                           value="{{ old('tempat_lahir', $mahasiswa->tempat_lahir) }}"
-                           placeholder="Masukkan Tempat Lahir">
-                </div>
-
-                {{-- Tanggal Lahir --}}
-                <div class="mb-3">
-                    <label class="form-label">Tanggal Lahir</label>
-
-                    <div class="row">
-
-                        @php
-                            $tgl = \Carbon\Carbon::parse($mahasiswa->tgl_lahir);
-                        @endphp
-
-                        {{-- Tanggal --}}
-                        <div class="col-md-4">
-                            <select name="tanggal" class="form-select">
-                                <option value="">Tanggal</option>
-
-                                @for ($i = 1; $i <= 31; $i++)
-                                    <option value="{{ $i }}" {{ old('tanggal', $tgl->day) == $i ? 'selected' : '' }}>
-                                        {{ $i }}
-                                    </option>
-                                @endfor
-
-                            </select>
-                        </div>
-
-                        {{-- Bulan --}}
-                        <div class="col-md-4">
-                            <select name="bulan" class="form-select">
-                                <option value="">Bulan</option>
-
-                                @php
-                                    $bulan = [
-                                        'Januari',
-                                        'Februari',
-                                        'Maret',
-                                        'April',
-                                        'Mei',
-                                        'Juni',
-                                        'Juli',
-                                        'Agustus',
-                                        'September',
-                                        'Oktober',
-                                        'November',
-                                        'Desember'
-                                    ];
-                                @endphp
-
-                                @foreach ($bulan as $key => $value)
-                                    <option value="{{ $key + 1 }}" {{ old('bulan', $tgl->month) == $key + 1 ? 'selected' : '' }}>
-                                        {{ $value }}
-                                    </option>
-                                @endforeach
-
-                            </select>
-                        </div>
-
-                        {{-- Tahun --}}
-                        <div class="col-md-4">
-                            <select name="tahun" class="form-select">
-                                <option value="">Tahun</option>
-
-                                @for ($i = date('Y'); $i >= 1900; $i--)
-                                    <option value="{{ $i }}" {{ old('tahun', $tgl->year) == $i ? 'selected' : '' }}>
-                                        {{ $i }}
-                                    </option>
-                                @endfor
-
-                            </select>
-                        </div>
-
+                <div class="detail-item">
+                    <div class="detail-label">Program Studi</div>
+                    <div class="detail-value">
+                        @if($prodiUpper === 'TRPL')
+                            Teknologi Rekayasa Perangkat Lunak (D4)
+                        @elseif($prodiUpper === 'MI')
+                            Manajemen Informatika (D3)
+                        @elseif($prodiUpper === 'TK')
+                            Teknik Komputer (D3)
+                        @elseif($prodiUpper === 'TEKKOM')
+                            Teknik Komputer (D4)
+                        @else
+                            {{ $mahasiswa->prodi }}
+                        @endif
                     </div>
                 </div>
 
-                {{-- Email --}}
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="email" 
-                           name="email" 
-                           class="form-control"
-                           value="{{ old('email', $mahasiswa->email) }}"
-                           placeholder="Masukkan Email">
+                <div class="detail-item">
+                    <div class="detail-label">Alamat Email</div>
+                    <div class="detail-value text-secondary">{{ $mahasiswa->email }}</div>
                 </div>
 
-                {{-- Prodi --}}
-                <div class="mb-3">
-                    <label class="form-label">Program Studi</label>
-
-                    <select name="prodi" class="form-select">
-                        <option value="">-- Pilih Prodi --</option>
-                        <option value="TRPL" {{ old('prodi', $mahasiswa->prodi) == 'TRPL' ? 'selected' : '' }}>TRPL</option>
-                        <option value="MI" {{ old('prodi', $mahasiswa->prodi) == 'MI' ? 'selected' : '' }}>MI</option>
-                        <option value="TK" {{ old('prodi', $mahasiswa->prodi) == 'TK' ? 'selected' : '' }}>TK</option>
-                        <option value="TEKKOM" {{ old('prodi', $mahasiswa->prodi) == 'TEKKOM' ? 'selected' : '' }}>TEKKOM</option>
-                    </select>
+                <div class="detail-item">
+                    <div class="detail-label">Tempat & Tanggal Lahir</div>
+                    <div class="detail-value">
+                        {{ $mahasiswa->tempat_lahir }}, {{ \Carbon\Carbon::parse($mahasiswa->tgl_lahir)->format('d F Y') }}
+                    </div>
                 </div>
 
-                {{-- Alamat --}}
-                <div class="mb-3">
-                    <label class="form-label">Alamat</label>
-
-                    <textarea name="alamat"
-                              rows="4"
-                              class="form-control"
-                              placeholder="Masukkan Alamat">{{ old('alamat', $mahasiswa->alamat) }}</textarea>
+                <div class="detail-item col-md-12">
+                    <div class="detail-label">Alamat Rumah</div>
+                    <div class="detail-value" style="line-height: 1.6;">{{ $mahasiswa->alamat }}</div>
                 </div>
+            </div>
 
-                {{-- Tombol --}}
-                <button type="submit" class="btn btn-primary">
-                    Perbarui
-                </button>
-
-                <a href="{{ route('mahasiswa.index') }}"
-                   class="btn btn-secondary">
-                    Kembali
+            {{-- Action Buttons --}}
+            <div class="d-flex justify-content-center gap-3 mt-4 pt-3 border-top" style="border-color: #f1f5f9 !important;">
+                <a href="{{ route('mahasiswa.index') }}" class="btn btn-secondary px-4">
+                    ← Kembali
                 </a>
-
-            </form>
+                <a href="{{ route('mahasiswa.edit', $mahasiswa->id) }}" class="btn btn-warning px-4 text-white">
+                    ✏️ Edit Data
+                </a>
+            </div>
 
         </div>
     </div>
