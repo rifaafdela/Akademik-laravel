@@ -1,35 +1,39 @@
-# Sistem Akademik
+Sistem Akademik
 
-Project Laravel CRUD Mahasiswa dan Dosen.
+Project Sistem Akademik berbasis Laravel untuk mengelola data Mahasiswa dan Dosen.
 
-## Fitur
+📌 Fitur
 
-- CRUD Mahasiswa
+Mahasiswa
 
-- CRUD Dosen
+Tambah data mahasiswa
 
-- Bootstrap UI
+Edit data mahasiswa
 
-- Validasi Form
+Hapus data mahasiswa
 
-## Teknologi
+Validasi form mahasiswa
 
-- Laravel 13
+Dosen
 
-- PHP 8
+Tambah data dosen
 
-- MySQL
+Edit data dosen
 
-- Bootstrap
+Hapus data dosen
 
-## Cara Menjalankan
+Validasi form dosen
 
-```bash
+🛠 Teknologi yang Digunakan
 
-php artisan serve
+Laravel 13
 
-```
+PHP 8
 
-## Author
+MySQL
 
-Rifa Afdela
+Bootstrap 5
+
+XAMPP
+
+VS Code
