@@ -54,26 +54,25 @@ class DosenController extends Controller
     }
 
     
-    public function update(Request $request, string $id)
-    {
-        $dosen = Dosen::findOrFail($id);
+   public function update(Request $request, string $id)
+{
+    $dosen = Dosen::findOrFail($id);
 
-        $validate = $request->validate([
-            'nik' => 'required|unique:dosens,nik,'. $dosen->id . '|max:15',
-            'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:dosens,email,' .$dosen->id,
-            'notelp' => 'requiredr',
-            'prodi' => 'required|string',
-            'alamat' => 'required|string',
-        ]);
+    $validate = $request->validate([
+        'nik' => 'required|unique:dosens,nik,'. $dosen->id . '|max:15',
+        'nama' => 'required|string|max:255',
+        'email' => 'required|email|unique:dosens,email,' .$dosen->id,
+        'notelp' => 'required', 
+        'prodi' => 'required|string',
+        'alamat' => 'required|string',
+    ]);
 
-        $dosen->update($validate);
+    $dosen->update($validate);
 
-        return redirect()
-            ->route('dosen.index')
-            ->with('success', 'Data dosen berhasil diperbarui.');
-    }
-
+    return redirect()
+        ->route('dosen.index')
+        ->with('success', 'Data dosen berhasil diperbarui.');
+}
     public function destroy(string $id)
     {
         Dosen::destroy($id);

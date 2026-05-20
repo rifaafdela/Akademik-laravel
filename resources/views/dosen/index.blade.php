@@ -43,7 +43,7 @@
                         @foreach ($dosen as $item)
                             <tr>
                                 <td class="text-center">{{ $loop->iteration + ($dosen->currentPage() - 1) * $dosen->perPage() }}</td>
-                                <td>{{ $item->nim }}</td>
+                                <td>{{ $item->nik }}</td>
                                 <td>{{ $item->nama }}</td>
                                 <td>{{ $item->email }}</td>
                                 <td>{{ $item->notelp }}</td>
